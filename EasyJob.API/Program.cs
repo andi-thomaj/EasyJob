@@ -26,7 +26,7 @@ namespace EasyJob.API
                 try
                 {
                     var userManager = services.GetRequiredService<UserManager<UserEntity>>();
-                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
                     await DefaultRoles.SeedAsync(roleManager);
                     await DefaultUsers.SeedAsync(userManager, roleManager);

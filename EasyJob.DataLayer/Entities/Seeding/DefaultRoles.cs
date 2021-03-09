@@ -5,10 +5,10 @@ namespace EasyJob.DataLayer.Entities.Seeding
 {
     public static class DefaultRoles
     {
-        public static async Task SeedAsync(RoleManager<IdentityRole> roleManager)
+        public static async Task SeedAsync(RoleManager<IdentityRole<int>> roleManager)
         {
-            await roleManager.CreateAsync(new IdentityRole("Admin"));
-            await roleManager.CreateAsync(new IdentityRole("BasicUser"));
+            await roleManager.CreateAsync(new IdentityRole<int>("Admin"));
+            await roleManager.CreateAsync(new IdentityRole<int>("BasicUser"));
         }
     }
 }

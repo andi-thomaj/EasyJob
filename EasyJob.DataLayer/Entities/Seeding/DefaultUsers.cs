@@ -7,7 +7,7 @@ namespace EasyJob.DataLayer.Entities.Seeding
 {
     public static class DefaultUsers
     {
-        public static async Task SeedAsync(UserManager<UserEntity> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedAsync(UserManager<UserEntity> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
             var defaultAdmin = new UserEntity
             {

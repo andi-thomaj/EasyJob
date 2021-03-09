@@ -11,6 +11,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +34,7 @@ namespace EasyJob.API
         {
             services.AddDbContext<EasyJobIdentityContext>(options =>
                 options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<UserEntity, IdentityRole>(o =>
+            services.AddIdentity<UserEntity, IdentityRole<int>>(o =>
                 {
                     o.Lockout.AllowedForNewUsers = true;
                     o.Lockout.MaxFailedAccessAttempts = 10;
@@ -47,6 +48,14 @@ namespace EasyJob.API
                     o.Password.RequiredUniqueChars = 0;
                     o.Password.RequireNonAlphanumeric = false;
                 })
+                .AddEntityFrameworkStores<EasyJobIdentityContext>()
+                .AddUserStore<UserStore<UserEntity, IdentityRole<int>, EasyJobIdentityContext, int>>()
+                .AddRoleManager<RoleManager<IdentityRole<int>>>()
+                .AddUserManager<UserManager<UserEntity>>()
+                .AddRoleValidator<RoleValidator<IdentityRole<int>>>()
+                .AddRoles<IdentityRole<int>>()
+                .AddSignInManager<SignInManager<UserEntity>>()
+                .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<UserEntity>>()
                 .AddDefaultTokenProviders();
 
             services.AddAuthorization(options =>

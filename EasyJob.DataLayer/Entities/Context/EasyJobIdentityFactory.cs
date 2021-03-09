@@ -6,16 +6,10 @@ namespace EasyJob.DataLayer.Entities.Context
 {
     public class EasyJobIdentityFactory : IDesignTimeDbContextFactory<EasyJobIdentityContext>
     {
-        private readonly IConfiguration _configuration;
-
-        public EasyJobIdentityFactory(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         public EasyJobIdentityContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<EasyJobIdentityContext>();
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseSqlServer("Server=localhost;Database=EasyJob;Trusted_Connection=True;");
 
             return new EasyJobIdentityContext(optionsBuilder.Options);
         }
