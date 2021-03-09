@@ -7,6 +7,6 @@ namespace EasyJob.DataLayer.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public ICollection<PostEntity> Posts { get; set; }
+        public string CompanyName { get; set; }
     }
 }

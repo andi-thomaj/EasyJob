@@ -1,12 +1,16 @@
+using System;
 using System.Reflection;
 using EasyJob.API.StartupServices;
 using EasyJob.BusinessLayer.AutoMapperProfile;
 using EasyJob.BusinessLayer.FluentValidationServices;
 using EasyJob.DataLayer.Entities;
+using EasyJob.DataLayer.Entities.Context;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,22 +20,40 @@ namespace EasyJob.API
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
+        
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<EasyJobIdentityContext>(options =>
+                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
+            services.AddIdentity<UserEntity, IdentityRole>(o =>
+                {
+                    o.Lockout.AllowedForNewUsers = true;
+                    o.Lockout.MaxFailedAccessAttempts = 10;
+                    o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
+                    o.User.RequireUniqueEmail = true;
+                    o.SignIn.RequireConfirmedEmail = true;
+                    o.Password.RequireDigit = false;
+                    o.Password.RequiredLength = 6;
+                    o.Password.RequireLowercase = false;
+                    o.Password.RequireUppercase = false;
+                    o.Password.RequiredUniqueChars = 0;
+                    o.Password.RequireNonAlphanumeric = false;
+                })
+                .AddDefaultTokenProviders();
+            
             services
                 .AddInfrastructureServices()
+                .AddRepositoriesAndServices()
                 .AddSwaggerGen();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

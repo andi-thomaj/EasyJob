@@ -19,19 +19,6 @@ namespace EasyJob.DataLayer.Entities.Context
             {
                 u.ToTable("Users");
             });
-
-            builder.Entity<PostEntity>()
-                .Property(p => p.Id)
-                .UseIdentityColumn();
-
-            builder.Entity<PostEntity>()
-                .HasIndex(i => i.UserId)
-                .IsUnique(false);
-
-            builder.Entity<PostEntity>()
-                .HasOne(r => r.User)
-                .WithMany(r => r.Posts)
-                .HasForeignKey(fk => fk.UserId);
         }
     }
 }
