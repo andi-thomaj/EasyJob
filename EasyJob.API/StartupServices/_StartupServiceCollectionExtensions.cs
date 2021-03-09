@@ -1,10 +1,12 @@
 ﻿using System.Reflection;
+using AutoMapper.Configuration;
 using EasyJob.API.CustomJSONFormatters;
 using EasyJob.BusinessLayer.AutoMapperProfile;
 using EasyJob.BusinessLayer.FluentValidationServices;
 using EasyJob.BusinessLayer.MailServices;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace EasyJob.API.StartupServices
 {

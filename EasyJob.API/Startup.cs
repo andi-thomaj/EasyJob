@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using System.Security.Claims;
 using EasyJob.API.StartupServices;
 using EasyJob.BusinessLayer.AutoMapperProfile;
 using EasyJob.BusinessLayer.FluentValidationServices;
@@ -47,9 +48,18 @@ namespace EasyJob.API
                     o.Password.RequireNonAlphanumeric = false;
                 })
                 .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(PolicyTypes.Users.Manage, policy =>
+                {
+                    policy.RequireClaim(CustomClaimTypes.Permission, "Permission");
+                });
+            });
             
             services
                 .AddInfrastructureServices()
+                .AddJwtConfiguration(_configuration)
                 .AddRepositoriesAndServices()
                 .AddSwaggerGen();
         }
