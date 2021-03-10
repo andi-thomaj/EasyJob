@@ -6,6 +6,7 @@ using EasyJob.BusinessLayer.FluentValidationServices;
 using EasyJob.BusinessLayer.MailServices;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace EasyJob.API.StartupServices

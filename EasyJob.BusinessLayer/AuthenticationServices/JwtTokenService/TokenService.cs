@@ -31,10 +31,13 @@ namespace EasyJob.BusinessLayer.AuthenticationServices.JwtTokenService
 
             var claims = new List<Claim>
             {
+                new Claim("FirstName", user.FirstName),
+                new Claim("LastName", user.LastName),
+                new Claim("CompanyName", user.CompanyName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email)
             };
-            
-            claims.AddRange(userClaims.Select(uClaim => new Claim("Permissions", uClaim.Value)));
+            /*claims.AddRange(userClaims.Select(uClaim => new Claim("Permissions", uClaim.Value)));*/
+            claims.AddRange(userClaims);
 
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

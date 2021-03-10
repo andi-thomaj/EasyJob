@@ -23,17 +23,18 @@ namespace EasyJob.DataLayer.Entities.Seeding
                 {
                     await userManager.CreateAsync(defaultAdmin, "123456");
                     await userManager.AddToRoleAsync(defaultAdmin, "Admin");
+                    await SeedClaimsForAdmin(roleManager);
                 }
             }
         }
 
-        private async static Task SeedClaimsForAdmin(this RoleManager<IdentityRole> roleManager)
+        private async static Task SeedClaimsForAdmin(this RoleManager<IdentityRole<int>> roleManager)
         {
             var adminRole = await roleManager.FindByNameAsync("Admin");
-            await roleManager.AddPermissionClaim(adminRole, "Products");
+            await roleManager.AddPermissionClaim(adminRole, "Killing");
         }
 
-        public static async Task AddPermissionClaim(this RoleManager<IdentityRole> roleManager, IdentityRole role,
+        public static async Task AddPermissionClaim(this RoleManager<IdentityRole<int>> roleManager, IdentityRole<int> role,
             string module)
         {
             var allClaims = await roleManager.GetClaimsAsync(role);

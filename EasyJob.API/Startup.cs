@@ -32,15 +32,16 @@ namespace EasyJob.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+   
             services.AddDbContext<EasyJobIdentityContext>(options =>
                 options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<UserEntity, IdentityRole<int>>(o =>
                 {
-                    o.Lockout.AllowedForNewUsers = true;
+                    o.Lockout.AllowedForNewUsers = false;
                     o.Lockout.MaxFailedAccessAttempts = 10;
                     o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
-                    o.User.RequireUniqueEmail = true;
-                    o.SignIn.RequireConfirmedEmail = true;
+                    o.User.RequireUniqueEmail = false;
+                    o.SignIn.RequireConfirmedEmail = false;
                     o.Password.RequireDigit = false;
                     o.Password.RequiredLength = 6;
                     o.Password.RequireLowercase = false;
@@ -58,19 +59,11 @@ namespace EasyJob.API
                 .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<UserEntity>>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(PolicyTypes.Users.Manage, policy =>
-                {
-                    policy.RequireClaim(CustomClaimTypes.Permission, "Permission");
-                });
-            });
-            
             services
                 .AddInfrastructureServices()
                 .AddJwtConfiguration(_configuration)
                 .AddRepositoriesAndServices()
-                .AddSwaggerGen();
+                .AddSwaggerService();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
