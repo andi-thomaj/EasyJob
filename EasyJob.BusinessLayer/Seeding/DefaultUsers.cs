@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using EasyJob.BusinessLayer.AuthenticationServices;
+using EasyJob.DataLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace EasyJob.DataLayer.Entities.Seeding
+namespace EasyJob.BusinessLayer.Seeding
 {
     public static class DefaultUsers
     {
@@ -38,7 +40,7 @@ namespace EasyJob.DataLayer.Entities.Seeding
             string module)
         {
             var allClaims = await roleManager.GetClaimsAsync(role);
-            var allPermissions = Permissions.GeneratePermissionsForModule(module);
+            var allPermissions = Permissions.GeneratePermissionsForModule(ControllerName.Posts);
             foreach (var permission in allPermissions)
             {
                 if (!allClaims.Any(a => a.Type == "Permission" && a.Value == permission))

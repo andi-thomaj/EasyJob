@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EasyJob.API.Helpers;
+using EasyJob.BusinessLayer.AuthenticationServices;
 using EasyJob.BusinessLayer.AuthenticationServices.JwtTokenService;
 using EasyJob.DataLayer.DTOs.Request.AccountsControllerRequests;
 using EasyJob.DataLayer.DTOs.Response.AccountsControllerResponses;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Extensions;
 
 namespace EasyJob.API.Controllers
 {
@@ -75,7 +77,7 @@ namespace EasyJob.API.Controllers
             if (!roleAssigningResult.Succeeded)
                 return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
 
-            var permissionsList = Permissions.GeneratePermissionsForModule("Posts");
+            var permissionsList = Permissions.GeneratePermissionsForModule(ControllerName.Posts);
             var claims = permissionsList.Select(permission => new Claim("Permission", permission));
             var claimsAssigningResult = await _userManager.AddClaimsAsync(user, claims);
             if (!claimsAssigningResult.Succeeded)

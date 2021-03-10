@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace EasyJob.DataLayer.Entities.Seeding
+namespace EasyJob.BusinessLayer.Seeding
 {
     public static class DefaultRoles
     {
