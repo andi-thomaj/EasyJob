@@ -19,24 +19,24 @@ namespace EasyJob.API
         {
             var host = CreateHostBuilder(args).Build();
 
-            using (var scope = host.Services.CreateScope())
+            /*using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
 
                 try
                 {
-                    /*var userManager = services.GetRequiredService<UserManager<UserEntity>>();*/
+                    /*var userManager = services.GetRequiredService<UserManager<UserEntity>>();#1#
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
                     await DefaultRoles.SeedAsync(roleManager);
-                    /*await DefaultUsers.SeedAsync(userManager, roleManager);*/
+                    /*await DefaultUsers.SeedAsync(userManager, roleManager);#1#
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                     throw;
                 }
-            }
+            }*/
 
             await host.RunAsync();
         }

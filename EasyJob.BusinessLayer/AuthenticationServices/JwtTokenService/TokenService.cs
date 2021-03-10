@@ -17,12 +17,16 @@ namespace EasyJob.BusinessLayer.AuthenticationServices.JwtTokenService
     {
         private readonly IConfiguration _configuration;
         private readonly UserManager<UserEntity> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly SymmetricSecurityKey _key;
 
-        public TokenService(IConfiguration configuration, UserManager<UserEntity> userManager)
+        public TokenService(IConfiguration configuration, 
+            UserManager<UserEntity> userManager,
+            RoleManager<IdentityRole<int>> roleManager)
         {
             _configuration = configuration;
             _userManager = userManager;
+            _roleManager = roleManager;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"]));
         }
         public async Task<string> CreateToken(UserEntity user)
@@ -31,12 +35,13 @@ namespace EasyJob.BusinessLayer.AuthenticationServices.JwtTokenService
 
             var claims = new List<Claim>
             {
-                new Claim("FirstName", user.FirstName),
-                new Claim("LastName", user.LastName),
-                new Claim("CompanyName", user.CompanyName),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email)
+                new Claim("firstName", user.FirstName),
+                new Claim("lastName", user.LastName),
+                new Claim("companyName", user.CompanyName),
+                new Claim("username", user.UserName),
+                new Claim(ClaimTypes.Email, user.Email)
             };
-            /*claims.AddRange(userClaims.Select(uClaim => new Claim("Permissions", uClaim.Value)));*/
+           
             claims.AddRange(userClaims);
 
             var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
