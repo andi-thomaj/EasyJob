@@ -1,14 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using EasyJob.DataLayer.Entities;
-using EasyJob.DataLayer.Entities.Context;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore;
 
-namespace EasyJob.API.Helpers
+namespace EasyJob.API.Helpers.CustomAuthenticationAttributes
 {
     public class PermissionRequiredAttribute : TypeFilterAttribute
     {

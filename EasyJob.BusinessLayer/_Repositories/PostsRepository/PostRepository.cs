@@ -21,11 +21,11 @@ namespace EasyJob.BusinessLayer._Repositories.PostsRepository
         }
         public async Task<IEnumerable<PostResponseDto>> GetPostsAsync()
         {
-            IEnumerable<PostEntity> listOfPosts = null;
+            IEnumerable<Posts> listOfPosts = null;
             await using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
                 var getPostsQuery = $"select * from Posts";
-                listOfPosts = await connection.QueryAsync<PostEntity>(getPostsQuery);
+                listOfPosts = await connection.QueryAsync<Posts>(getPostsQuery);
             }
 
             var posts = _mapper.Map<IEnumerable<PostResponseDto>>(listOfPosts);

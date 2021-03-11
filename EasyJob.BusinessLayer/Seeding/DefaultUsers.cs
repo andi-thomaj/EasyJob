@@ -9,9 +9,9 @@ namespace EasyJob.BusinessLayer.Seeding
 {
     public static class DefaultUsers
     {
-        public static async Task SeedAsync(UserManager<UserEntity> userManager, RoleManager<IdentityRole<int>> roleManager)
+        public static async Task SeedAsync(UserManager<Users> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
-            var defaultAdmin = new UserEntity
+            var defaultAdmin = new Users
             {
                 UserName = "andi.dev94@gmail.com",
                 Email = "andi.dev94@gmail.com",

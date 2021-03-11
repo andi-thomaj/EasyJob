@@ -19,7 +19,67 @@ namespace EasyJob.DataLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("EasyJob.DataLayer.Entities.UserEntity", b =>
+            modelBuilder.Entity("EasyJob.DataLayer.Entities.ApprovalStatuses", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApprovalStatuses");
+                });
+
+            modelBuilder.Entity("EasyJob.DataLayer.Entities.Keywords", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Keyword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Keywords");
+                });
+
+            modelBuilder.Entity("EasyJob.DataLayer.Entities.Posts", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("ApprovalStatusesId")
+                        .HasColumnType("int")
+                        .HasColumnName("StatusId");
+
+                    b.Property<string>("JobText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Photo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApprovalStatusesId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("EasyJob.DataLayer.Entities.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,6 +153,21 @@ namespace EasyJob.DataLayer.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("KeywordsPosts", b =>
+                {
+                    b.Property<int>("KeywordsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PostsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("KeywordsId", "PostsId");
+
+                    b.HasIndex("PostsId");
+
+                    b.ToTable("KeywordsPosts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -225,6 +300,40 @@ namespace EasyJob.DataLayer.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("EasyJob.DataLayer.Entities.Posts", b =>
+                {
+                    b.HasOne("EasyJob.DataLayer.Entities.ApprovalStatuses", "ApprovalStatuses")
+                        .WithOne("Post")
+                        .HasForeignKey("EasyJob.DataLayer.Entities.Posts", "ApprovalStatusesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EasyJob.DataLayer.Entities.Users", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApprovalStatuses");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("KeywordsPosts", b =>
+                {
+                    b.HasOne("EasyJob.DataLayer.Entities.Keywords", null)
+                        .WithMany()
+                        .HasForeignKey("KeywordsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EasyJob.DataLayer.Entities.Posts", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
@@ -236,7 +345,7 @@ namespace EasyJob.DataLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
-                    b.HasOne("EasyJob.DataLayer.Entities.UserEntity", null)
+                    b.HasOne("EasyJob.DataLayer.Entities.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -245,7 +354,7 @@ namespace EasyJob.DataLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
-                    b.HasOne("EasyJob.DataLayer.Entities.UserEntity", null)
+                    b.HasOne("EasyJob.DataLayer.Entities.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -260,7 +369,7 @@ namespace EasyJob.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EasyJob.DataLayer.Entities.UserEntity", null)
+                    b.HasOne("EasyJob.DataLayer.Entities.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -269,11 +378,21 @@ namespace EasyJob.DataLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.HasOne("EasyJob.DataLayer.Entities.UserEntity", null)
+                    b.HasOne("EasyJob.DataLayer.Entities.Users", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("EasyJob.DataLayer.Entities.ApprovalStatuses", b =>
+                {
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("EasyJob.DataLayer.Entities.Users", b =>
+                {
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,9 +1,9 @@
 ﻿namespace EasyJob.DataLayer.Entities
 {
-    public class ApprovalStatusesEntity
+    public class ApprovalStatuses
     {
         public int Id { get; set; }
         public string Status { get; set; }
-        public PostEntity Post { get; set; }
+        public Posts Posts { get; set; }
     }
 }

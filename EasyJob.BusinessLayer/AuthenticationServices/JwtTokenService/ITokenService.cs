@@ -5,6 +5,6 @@ namespace EasyJob.BusinessLayer.AuthenticationServices.JwtTokenService
 {
     public interface ITokenService
     {
-        Task<string> CreateToken(UserEntity user);
+        Task<string> CreateToken(Users user);
     }
 }

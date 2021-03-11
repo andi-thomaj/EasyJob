@@ -8,7 +8,7 @@ namespace EasyJob.BusinessLayer.AutoMapperProfile
     {
         public MapperProfile()
         {
-            CreateMap<PostEntity, PostResponseDto>()
+            CreateMap<Posts, PostResponseDto>()
                 .ReverseMap();
         }
     }

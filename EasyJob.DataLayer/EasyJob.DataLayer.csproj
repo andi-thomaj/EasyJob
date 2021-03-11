@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <Folder Include="DTOs\Request\PostsControllerRequests" />
+      <Folder Include="Migrations" />
     </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EasyJob.API.Helpers;
+using EasyJob.API.Helpers.CustomAuthenticationAttributes;
 using EasyJob.BusinessLayer.AuthenticationServices;
 using EasyJob.BusinessLayer.AuthenticationServices.JwtTokenService;
 using EasyJob.DataLayer.DTOs.Request.AccountsControllerRequests;
@@ -18,14 +19,14 @@ namespace EasyJob.API.Controllers
 {
     public class AccountsController : BaseApiController
     {
-        private readonly UserManager<UserEntity> _userManager;
-        private readonly SignInManager<UserEntity> _signInManager;
+        private readonly UserManager<Users> _userManager;
+        private readonly SignInManager<Users> _signInManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly EasyJobIdentityContext _context;
         private readonly ITokenService _tokenService;
 
-        public AccountsController(UserManager<UserEntity> userManager,
-            SignInManager<UserEntity> signInManager,
+        public AccountsController(UserManager<Users> userManager,
+            SignInManager<Users> signInManager,
             RoleManager<IdentityRole<int>> roleManager,
             EasyJobIdentityContext context,
             ITokenService tokenService)
@@ -60,7 +61,7 @@ namespace EasyJob.API.Controllers
             if (userExist)
                 return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
      
-            var userCreationResult = await _userManager.CreateAsync(new UserEntity
+            var userCreationResult = await _userManager.CreateAsync(new Users
             {
                 FirstName = registerDto.FirstName,
                 LastName = registerDto.LastName,

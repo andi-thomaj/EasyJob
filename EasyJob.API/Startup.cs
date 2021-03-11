@@ -35,7 +35,7 @@ namespace EasyJob.API
    
             services.AddDbContext<EasyJobIdentityContext>(options =>
                 options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<UserEntity, IdentityRole<int>>(o =>
+            services.AddIdentity<Users, IdentityRole<int>>(o =>
                 {
                     o.Lockout.AllowedForNewUsers = false;
                     o.Lockout.MaxFailedAccessAttempts = 10;
@@ -50,13 +50,13 @@ namespace EasyJob.API
                     o.Password.RequireNonAlphanumeric = false;
                 })
                 .AddEntityFrameworkStores<EasyJobIdentityContext>()
-                .AddUserStore<UserStore<UserEntity, IdentityRole<int>, EasyJobIdentityContext, int>>()
+                .AddUserStore<UserStore<Users, IdentityRole<int>, EasyJobIdentityContext, int>>()
                 .AddRoleManager<RoleManager<IdentityRole<int>>>()
-                .AddUserManager<UserManager<UserEntity>>()
+                .AddUserManager<UserManager<Users>>()
                 .AddRoleValidator<RoleValidator<IdentityRole<int>>>()
                 .AddRoles<IdentityRole<int>>()
-                .AddSignInManager<SignInManager<UserEntity>>()
-                .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<UserEntity>>()
+                .AddSignInManager<SignInManager<Users>>()
+                .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<Users>>()
                 .AddDefaultTokenProviders();
 
             services

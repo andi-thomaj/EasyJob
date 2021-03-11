@@ -16,12 +16,12 @@ namespace EasyJob.BusinessLayer.AuthenticationServices.JwtTokenService
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
-        private readonly UserManager<UserEntity> _userManager;
+        private readonly UserManager<Users> _userManager;
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly SymmetricSecurityKey _key;
 
         public TokenService(IConfiguration configuration, 
-            UserManager<UserEntity> userManager,
+            UserManager<Users> userManager,
             RoleManager<IdentityRole<int>> roleManager)
         {
             _configuration = configuration;
@@ -29,7 +29,7 @@ namespace EasyJob.BusinessLayer.AuthenticationServices.JwtTokenService
             _roleManager = roleManager;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"]));
         }
-        public async Task<string> CreateToken(UserEntity user)
+        public async Task<string> CreateToken(Users user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
 
