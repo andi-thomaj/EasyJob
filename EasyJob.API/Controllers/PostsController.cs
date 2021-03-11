@@ -16,12 +16,12 @@ namespace EasyJob.API.Controllers
             _postService = postService;
         }
 
-        /*[HttpGet("GetPostsAsync")]*/
-        /*public async Task<IEnumerable<PostResponseDto>> GetPostsAsync()
+        [HttpGet("GetPostsAsync")]
+        public async Task<IEnumerable<PostResponseDto>> GetPostsAsync()
         {
             var posts = await _postService.GetPostsAsync();
 
             return posts;
-        }*/
+        }
     }
 }

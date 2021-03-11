@@ -90,11 +90,11 @@ namespace EasyJob.API.Controllers
             });
         }
 
-        [HttpGet("GetSuccess")]
+        /*[HttpGet("GetSuccess")]
         [PermissionRequired("Permissions.Posts.Create")]
         public async Task<string> Success()
         {
             return "Success";
-        }
+        }*/
     }
 }
