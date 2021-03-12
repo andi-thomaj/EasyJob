@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using EasyJob.Application.Features.Posts.Queries.GetPosts;
+using EasyJob.Domain.Entities;
 
 namespace EasyJob.Application.Profiles
 {
@@ -6,7 +8,7 @@ namespace EasyJob.Application.Profiles
     {
         public MappingProfile()
         {
-            
+            CreateMap<Post, PostsDto>().ReverseMap();
         }
     }
 }
