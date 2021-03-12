@@ -55,25 +55,25 @@ namespace EasyJob.API.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<UserResponseDto>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<UserResponseDto>> Register(RegistrationRequest request)
         {
-            bool userExist = await _context.Users.AnyAsync(u => u.Email == registerDto.Email);
+            bool userExist = await _context.Users.AnyAsync(u => u.Email == request.Email);
             if (userExist)
                 return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
      
             var userCreationResult = await _userManager.CreateAsync(new Users
             {
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
-                UserName = registerDto.UserName,
-                Email = registerDto.Email,
-                CompanyName = registerDto.CompanyName
-            }, registerDto.Password);
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                UserName = request.UserName,
+                Email = request.Email,
+                CompanyName = request.CompanyName
+            }, request.Password);
 
             if (!userCreationResult.Succeeded)
                 return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
 
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == registerDto.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             var roleAssigningResult = await _userManager.AddToRoleAsync(user, "Basic");
             if (!roleAssigningResult.Succeeded)
                 return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
