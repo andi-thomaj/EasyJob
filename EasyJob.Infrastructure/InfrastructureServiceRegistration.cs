@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Text;
+using EasyJob.Application.Contracts.Identity;
 using EasyJob.Application.Contracts.Infrastructure;
 using EasyJob.Application.Models.Authentication;
 using EasyJob.Application.Models.Mail;
+using EasyJob.Infrastructure.Identity;
 using EasyJob.Infrastructure.Mail;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -60,7 +62,8 @@ namespace EasyJob.Infrastructure
                         },
                     };*/
                 });
-            
+
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             

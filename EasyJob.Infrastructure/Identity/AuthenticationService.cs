@@ -74,7 +74,7 @@ namespace EasyJob.Infrastructure.Identity
                 return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});*/
 
             var permissionsList = Permissions.GeneratePermissionsForModule(ControllerName.Posts);
-            var claims = permissionsList.Select(permission => new Claim("Permission", permission));
+            var claims = permissionsList.Select(permission => new Claim("Permissions", permission));
             var claimsAssigningResult = await _userManager.AddClaimsAsync(user, claims);
             /*if (!claimsAssigningResult.Succeeded)
                 return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});*/
