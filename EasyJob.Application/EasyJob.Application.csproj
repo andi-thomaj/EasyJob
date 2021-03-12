@@ -10,7 +10,6 @@
 
     <ItemGroup>
       <Folder Include="Features\Posts\Commands\CreatePost" />
-      <Folder Include="Features\Posts\Queries\GetPosts" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,27 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using EasyJob.BusinessLayer._DataAccessServices.PostsService;
-using EasyJob.BusinessLayer._Repositories.PostsRepository;
-using EasyJob.DataLayer.DTOs.Response.PostsControllerResponses;
+using EasyJob.Application.Features.Posts.Queries.GetPosts;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyJob.API.Controllers
 {
     public class PostsController : BaseApiController
     {
-        private readonly IPostService _postService;
+        private readonly IMediator _mediator;
 
-        public PostsController(IPostService postService)
+        public PostsController(IMediator mediator)
         {
-            _postService = postService;
+            _mediator = mediator;
         }
 
         [HttpGet("GetPostsAsync")]
-        public async Task<IEnumerable<PostResponseDto>> GetPostsAsync()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<List<PostsDto>>> GetPostsAsync()
         {
-            var posts = await _postService.GetPostsAsync();
+            var posts = await _mediator.Send(new GetPostsQuery());
 
-            return posts;
+            return Ok(posts);
         }
     }
 }

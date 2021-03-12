@@ -1,22 +1,13 @@
-using System;
-using System.Reflection;
-using System.Security.Claims;
+using EasyJob.API.CustomJSONFormatters;
 using EasyJob.API.StartupServices;
-using EasyJob.BusinessLayer.AutoMapperProfile;
-using EasyJob.BusinessLayer.FluentValidationServices;
-using EasyJob.DataLayer.Entities;
-using EasyJob.DataLayer.Entities.Context;
-using FluentValidation;
-using FluentValidation.AspNetCore;
+using EasyJob.Application;
+using EasyJob.Infrastructure;
+using EasyJob.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace EasyJob.API
 {
@@ -33,36 +24,18 @@ namespace EasyJob.API
         public void ConfigureServices(IServiceCollection services)
         {
    
-            services.AddDbContext<EasyJobIdentityContext>(options =>
-                options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<Users, IdentityRole<int>>(o =>
+            services.AddControllers()
+                .AddJsonOptions(options =>
                 {
-                    o.Lockout.AllowedForNewUsers = false;
-                    o.Lockout.MaxFailedAccessAttempts = 10;
-                    o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(10);
-                    o.User.RequireUniqueEmail = false;
-                    o.SignIn.RequireConfirmedEmail = false;
-                    o.Password.RequireDigit = false;
-                    o.Password.RequiredLength = 6;
-                    o.Password.RequireLowercase = false;
-                    o.Password.RequireUppercase = false;
-                    o.Password.RequiredUniqueChars = 0;
-                    o.Password.RequireNonAlphanumeric = false;
-                })
-                .AddEntityFrameworkStores<EasyJobIdentityContext>()
-                .AddUserStore<UserStore<Users, IdentityRole<int>, EasyJobIdentityContext, int>>()
-                .AddRoleManager<RoleManager<IdentityRole<int>>>()
-                .AddUserManager<UserManager<Users>>()
-                .AddRoleValidator<RoleValidator<IdentityRole<int>>>()
-                .AddRoles<IdentityRole<int>>()
-                .AddSignInManager<SignInManager<Users>>()
-                .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<Users>>()
-                .AddDefaultTokenProviders();
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                    options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+                });
+            
 
             services
-                .AddInfrastructureServices()
-                .AddJwtConfiguration(_configuration)
-                .AddRepositoriesAndServices()
+                .AddApplicationServices()
+                .AddInfrastructureServices(_configuration)
+                .AddPersistenceServices(_configuration)
                 .AddSwaggerService();
         }
 

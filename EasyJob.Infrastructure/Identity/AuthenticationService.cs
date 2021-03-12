@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using EasyJob.Application.Contracts.Identity;
 using EasyJob.Application.Models.Authentication;
 using EasyJob.Domain.Entities;
+using EasyJob.Persistence.Context;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -18,28 +21,42 @@ namespace EasyJob.Infrastructure.Identity
         private readonly IConfiguration _configuration;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly EasyJobIdentityContext _context;
         private readonly SymmetricSecurityKey _key;
 
-        public AuthenticationService(IConfiguration configuration, UserManager<User> userManager,
-            SignInManager<User> signInManager)
+        public AuthenticationService(IConfiguration configuration, 
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            EasyJobIdentityContext context)
         {
             _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
-            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"]))
+            _context = context;
+            _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Token:Key"]));
         }
         public async Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request)
         {
-            throw new System.NotImplementedException();
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+            /*if (!result.Succeeded)
+            {
+                return Unauthorized("Ooops wrong password.");
+            }*/
+            
+            return new AuthenticationResponse
+            {
+                Token = await CreateToken(user)
+            };
         }
 
         public async Task<AuthenticationResponse> RegisterAsync(RegistrationRequest request)
         {
             bool userExist = await _context.Users.AnyAsync(u => u.Email == request.Email);
-            if (userExist)
-                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
+            /*if (userExist)
+                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});*/
      
-            var userCreationResult = await _userManager.CreateAsync(new Users
+            var userCreationResult = await _userManager.CreateAsync(new User
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
@@ -48,24 +65,24 @@ namespace EasyJob.Infrastructure.Identity
                 CompanyName = request.CompanyName
             }, request.Password);
 
-            if (!userCreationResult.Succeeded)
-                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
+            /*if (!userCreationResult.Succeeded)
+                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});*/
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             var roleAssigningResult = await _userManager.AddToRoleAsync(user, "Basic");
-            if (!roleAssigningResult.Succeeded)
-                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
+            /*if (!roleAssigningResult.Succeeded)
+                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});*/
 
             var permissionsList = Permissions.GeneratePermissionsForModule(ControllerName.Posts);
             var claims = permissionsList.Select(permission => new Claim("Permission", permission));
             var claimsAssigningResult = await _userManager.AddClaimsAsync(user, claims);
-            if (!claimsAssigningResult.Succeeded)
-                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
+            /*if (!claimsAssigningResult.Succeeded)
+                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});*/
             
-            return Ok(new UserResponseDto
+            return new AuthenticationResponse
             {
-                Token = await _tokenService.CreateToken(user)
-            });
+                Token = await CreateToken(user)
+            };
         }
 
         private async Task<string> CreateToken(User user)

@@ -3,7 +3,7 @@ using Microsoft.OpenApi.Models;
 
 namespace EasyJob.API.StartupServices
 {
-    public static partial class StartupServiceCollectionExtensions
+    public static class StartupSwagger
     {
         public static IServiceCollection AddSwaggerService(this IServiceCollection services)
         {

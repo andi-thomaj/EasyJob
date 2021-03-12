@@ -1,93 +1,28 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using EasyJob.API.Helpers;
-using EasyJob.API.Helpers.CustomAuthenticationAttributes;
-using EasyJob.BusinessLayer.AuthenticationServices;
-using EasyJob.BusinessLayer.AuthenticationServices.JwtTokenService;
-using EasyJob.DataLayer.DTOs.Request.AccountsControllerRequests;
-using EasyJob.DataLayer.DTOs.Response.AccountsControllerResponses;
-using EasyJob.DataLayer.Entities;
-using EasyJob.DataLayer.Entities.Context;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Threading.Tasks;
+using EasyJob.Application.Contracts.Identity;
+using EasyJob.Application.Models.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Extensions;
 
 namespace EasyJob.API.Controllers
 {
     public class AccountsController : BaseApiController
     {
-        private readonly UserManager<Users> _userManager;
-        private readonly SignInManager<Users> _signInManager;
-        private readonly RoleManager<IdentityRole<int>> _roleManager;
-        private readonly EasyJobIdentityContext _context;
-        private readonly ITokenService _tokenService;
-
-        public AccountsController(UserManager<Users> userManager,
-            SignInManager<Users> signInManager,
-            RoleManager<IdentityRole<int>> roleManager,
-            EasyJobIdentityContext context,
-            ITokenService tokenService)
+        private readonly IAuthenticationService _authenticationService;
+        public AccountsController(IAuthenticationService authenticationService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _roleManager = roleManager;
-            _context = context;
-            _tokenService = tokenService;
+            _authenticationService = authenticationService;
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult<UserResponseDto>> Login(LoginDto loginDto)
+        public async Task<ActionResult<AuthenticationResponse>> Login(AuthenticationRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
-            if (!result.Succeeded)
-            {
-                return Unauthorized("Ooops wrong password.");
-            }
-            
-            return Ok(new UserResponseDto
-            {
-                Token = await _tokenService.CreateToken(user)
-            });
+            return Ok(await _authenticationService.AuthenticateAsync(request));
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult<UserResponseDto>> Register(RegistrationRequest request)
+        public async Task<ActionResult<RegistrationRespone>> Register(RegistrationRequest request)
         {
-            bool userExist = await _context.Users.AnyAsync(u => u.Email == request.Email);
-            if (userExist)
-                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
-     
-            var userCreationResult = await _userManager.CreateAsync(new Users
-            {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                UserName = request.UserName,
-                Email = request.Email,
-                CompanyName = request.CompanyName
-            }, request.Password);
-
-            if (!userCreationResult.Succeeded)
-                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            var roleAssigningResult = await _userManager.AddToRoleAsync(user, "Basic");
-            if (!roleAssigningResult.Succeeded)
-                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
-
-            var permissionsList = Permissions.GeneratePermissionsForModule(ControllerName.Posts);
-            var claims = permissionsList.Select(permission => new Claim("Permission", permission));
-            var claimsAssigningResult = await _userManager.AddClaimsAsync(user, claims);
-            if (!claimsAssigningResult.Succeeded)
-                return Ok(new ApiResponse {Succeeded = false, Message = "Failed."});
-            
-            return Ok(new UserResponseDto
-            {
-                Token = await _tokenService.CreateToken(user)
-            });
+            return Ok(await _authenticationService.RegisterAsync(request));
         }
 
         /*[HttpGet("GetSuccess")]
