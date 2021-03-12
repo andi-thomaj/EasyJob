@@ -10,7 +10,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\EasyJob.Application\EasyJob.Application.csproj" />
       <ProjectReference Include="..\EasyJob.BusinessLayer\EasyJob.BusinessLayer.csproj" />
+      <ProjectReference Include="..\EasyJob.Infrastructure\EasyJob.Infrastructure.csproj" />
+      <ProjectReference Include="..\EasyJob.Persistence\EasyJob.Persistence.csproj" />
     </ItemGroup>
 
 </Project>
