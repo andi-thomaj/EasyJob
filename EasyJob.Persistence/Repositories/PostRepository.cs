@@ -10,15 +10,11 @@ namespace EasyJob.Persistence.Repositories
 {
     public class PostRepository : BaseRepository<Post>, IPostRepository
     {
-        /*public PostRepository()
+        public async Task<List<PostsDto>> GetAllStuff()
         {
-            var str = Connection.ConnectionString;
-        }*/
-
-        public async Task<List<Post>> GetAllStuff()
-        {
-            var p = await Context.Posts.ToListAsync();
-            return p;
+            var posts = await Context.Posts.ToListAsync();
+            var mappedPosts = Mapper.Map<List<PostsDto>>(posts);
+            return mappedPosts;
         }
     }
 }

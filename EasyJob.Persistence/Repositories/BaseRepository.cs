@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using EasyJob.Application.Contracts.Persistence;
 using EasyJob.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ namespace EasyJob.Persistence.Repositories
     {
         public EasyJobIdentityContext Context { get; set; }
         public IServiceProvider ServiceProvider { get; set; }
+        public IMapper Mapper { get; set; }
         public TService GetService<TService>() => (TService) ServiceProvider.GetService(typeof(TService));
         public IDbConnection Connection
         {
