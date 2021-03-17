@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EasyJob.Persistence.Repositories
 {
-    public class BaseRepository<T> : IAsyncRepository<T> where T : class
+    public abstract class BaseRepository<T> : IAsyncRepository<T> where T : class
     {
         public EasyJobIdentityContext Context { get; set; }
         public IServiceProvider ServiceProvider { get; set; }
