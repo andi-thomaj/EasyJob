@@ -7,22 +7,16 @@ namespace EasyJob.API.Controllers
 {
     public class AccountsController : BaseApiController
     {
-        private readonly IAuthenticationService _authenticationService;
-        public AccountsController(IAuthenticationService authenticationService)
-        {
-            _authenticationService = authenticationService;
-        }
-
         [HttpPost("Login")]
         public async Task<ActionResult<AuthenticationResponse>> Login(AuthenticationRequest request)
         {
-            return Ok(await _authenticationService.AuthenticateAsync(request));
+            return Ok(await AuthenticationService.AuthenticateAsync(request));
         }
 
         [HttpPost("Register")]
         public async Task<ActionResult<RegistrationRespone>> Register(RegistrationRequest request)
         {
-            return Ok(await _authenticationService.RegisterAsync(request));
+            return Ok(await AuthenticationService.RegisterAsync(request));
         }
 
         /*[HttpGet("GetSuccess")]

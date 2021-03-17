@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using EasyJob.Infrastructure.Identity.Seeding;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -12,7 +13,9 @@ namespace EasyJob.API
     {
         public static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            var host = CreateHostBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .Build();
 
             using (var scope = host.Services.CreateScope())
             {

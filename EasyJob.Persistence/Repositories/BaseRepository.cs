@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using EasyJob.Application.Contracts.Persistence;
@@ -10,46 +11,57 @@ namespace EasyJob.Persistence.Repositories
 {
     public class BaseRepository<T> : IAsyncRepository<T> where T : class
     {
-        private readonly EasyJobIdentityContext _context;
-
-        public BaseRepository(EasyJobIdentityContext context)
+        public EasyJobIdentityContext Context { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
+        public TService GetService<TService>() => (TService) ServiceProvider.GetService(typeof(TService));
+        public IDbConnection Connection
         {
-            _context = context;
+            get
+            {
+                var connection = Context.Database.GetDbConnection();
+
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                return connection;
+            }
         }
         
         public async Task<T> GetByIdAsync(Guid id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            return await Context.Set<T>().FindAsync(id);
         }
 
         public async Task<IReadOnlyList<T>> ListAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await Context.Set<T>().ToListAsync();
         }
 
         public async Task<T> AddAsync(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
-            await _context.SaveChangesAsync();
+            await Context.Set<T>().AddAsync(entity);
+            await Context.SaveChangesAsync();
 
             return entity;
         }
 
         public async Task UpdateAsync(T entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            Context.Entry(entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(T entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            Context.Entry(entity).State = EntityState.Modified;
+            await Context.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyList<T>> GetPagedReponseAsync(int page, int size)
         {
-            return await _context.Set<T>().Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
+            return await Context.Set<T>().Skip((page - 1) * size).Take(size).AsNoTracking().ToListAsync();
         }
     }
 }

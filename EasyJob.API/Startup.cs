@@ -1,3 +1,6 @@
+using System.Reflection;
+using Autofac;
+using EasyJob.API.Controllers;
 using EasyJob.API.CustomJSONFormatters;
 using EasyJob.API.StartupServices;
 using EasyJob.Application;
@@ -13,18 +16,35 @@ namespace EasyJob.API
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
+        public IConfigurationRoot ConfigurationRoot { get; set; }
+        public ILifetimeScope AutofacContainer { get; set; }
+        private readonly IWebHostEnvironment _environment;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment environment)
         {
-            _configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(environment.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{environment.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+            this.ConfigurationRoot = builder.Build();
+            _environment = environment;
         }
-        
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new ApplicationAutofacServiceModule());
+            builder.RegisterModule(new InfrastructureAutofacServiceModule());
+            builder.RegisterModule(new PersistenceAutofacServiceModule());
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                .Where(t => t.IsSubclassOf(typeof(BaseApiController)))
+                .PropertiesAutowired();
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
    
             services.AddControllers()
+                .AddControllersAsServices()
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.IgnoreNullValues = true;
@@ -34,8 +54,8 @@ namespace EasyJob.API
 
             services
                 .AddApplicationServices()
-                .AddInfrastructureServices(_configuration)
-                .AddPersistenceServices(_configuration)
+                .AddInfrastructureServices(ConfigurationRoot)
+                .AddPersistenceServices(ConfigurationRoot)
                 .AddSwaggerService();
         }
 

@@ -63,7 +63,7 @@ namespace EasyJob.Infrastructure
                     };*/
                 });
 
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            /*services.AddScoped<IAuthenticationService, AuthenticationService>();*/
             
             services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
             
