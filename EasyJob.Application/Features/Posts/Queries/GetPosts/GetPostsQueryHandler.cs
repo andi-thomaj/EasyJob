@@ -12,15 +12,18 @@ namespace EasyJob.Application.Features.Posts.Queries.GetPosts
     {
         private readonly IMapper _mapper;
         private readonly IAsyncRepository<Post> _repository;
+        private readonly IPostRepository _postRepository;
 
         public GetPostsQueryHandler(IMapper mapper,
-            IAsyncRepository<Post> repository)
+            IAsyncRepository<Post> repository, IPostRepository postRepository)
         {
             _mapper = mapper;
             _repository = repository;
+            _postRepository = postRepository;
         }
         public async Task<List<PostsDto>> Handle(GetPostsQuery request, CancellationToken cancellationToken)
         {
+            var posts = await _postRepository.GetAllStuff();
             var postsFromDb = await _repository.ListAllAsync();
             var postsMapped = _mapper.Map<List<PostsDto>>(postsFromDb);
             

@@ -43,10 +43,6 @@ namespace EasyJob.Persistence
                 .AddClaimsPrincipalFactory<UserClaimsPrincipalFactory<User>>()
                 .AddDefaultTokenProviders();
 
-            services.AddScoped(typeof(IAsyncRepository<>), typeof(BaseRepository<>));
-
-            services.AddScoped<IPostRepository, PostRepository>();
-
             return services;
         }
     }
