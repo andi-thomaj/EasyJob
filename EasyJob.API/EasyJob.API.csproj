@@ -18,4 +18,8 @@
       <ProjectReference Include="..\EasyJob.Persistence\EasyJob.Persistence.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\UI" />
+    </ItemGroup>
+
 </Project>
