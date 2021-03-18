@@ -11,12 +11,6 @@ namespace EasyJob.Persistence
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
-            /*builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .Where(t => t.IsClosedTypeOf(typeof(BaseRepository<>)) || t.IsSubclassOf(typeof(BaseRepository<>)))
-                .PropertiesAutowired();*/
-            //builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                //.Where(t => t.IsClosedTypeOf(typeof(BaseRepository<>)) || t.IsSubclassOf(typeof(BaseRepository<>)))
-                //.PropertiesAutowired();
             builder.RegisterGeneric(typeof(BaseRepository<>))
                 .As(typeof(IAsyncRepository<>))
                 .PropertiesAutowired();

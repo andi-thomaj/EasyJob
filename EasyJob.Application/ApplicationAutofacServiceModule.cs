@@ -16,7 +16,6 @@ namespace EasyJob.Application
             mediatRTypes.Select(type => builder.RegisterMediatR(type.Assembly)).ToList();*/
             //builder.RegisterMediatR(Assembly.GetExecutingAssembly());
             //builder.RegisterMediatR(Assembly.GetExecutingAssembly()).RegisterType<Mediator>().As<IMediator>().PropertiesAutowired();
-            
         }
     }
 }
