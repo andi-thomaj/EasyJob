@@ -19,7 +19,37 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\UI" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\.browserslistrc" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\.editorconfig" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\.gitignore" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\angular.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\e2e\protractor.conf.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\e2e\src\app.e2e-spec.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\e2e\src\app.po.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\e2e\tsconfig.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\karma.conf.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\package-lock.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\package.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\README.md" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\app\app-routing.module.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\app\app.component.html" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\app\app.component.sass" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\app\app.component.spec.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\app\app.component.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\app\app.module.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\assets\.gitkeep" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\environments\environment.prod.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\environments\environment.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\favicon.ico" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\index.html" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\main.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\polyfills.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\styles.sass" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\src\test.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\tsconfig.app.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\tsconfig.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\tsconfig.spec.json" />
+      <_ContentIncludedByDefault Remove="wwwroot\UI\easy-job\tslint.json" />
     </ItemGroup>
 
 </Project>
